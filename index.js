@@ -464,3 +464,5 @@ app.get("/report/closed-tasks", verifyToken, async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Port running on the ${PORT}`);
 });
+
+export default app
