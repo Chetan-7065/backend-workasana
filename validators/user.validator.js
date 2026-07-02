@@ -1,6 +1,6 @@
 import { z } from "zod";
 import mongoose from "mongoose";
-import User from "../models/User.models.js";
+import User from "../models/user.models.js";
 
 const createUserZodSchema = z
   .object({
