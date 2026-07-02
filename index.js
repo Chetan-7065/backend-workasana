@@ -9,7 +9,7 @@ import Task from "./models/task.models.js";
 import Project from "./models/project.models.js"; 
 import Team from "./models/team.models.js";
 import Tag from "./models/tag.models.js";
-import User from "./models/User.models.js";
+import User from "./models/user.models.js";
 import authRoutes from "./routes/auth.js"
 import createProjectZodSchema from "./validators/project.validator.js";
 import createTaskZodSchema from "./validators/task.validator.js";
