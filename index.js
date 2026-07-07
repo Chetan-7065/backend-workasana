@@ -17,7 +17,7 @@ import createTagZodSchema from "./validators/tag.validator.js";
 import createTeamZodSchema from "./validators/team.validator.js";
 import createUserZodSchema from "./validators/user.validator.js";
 const app = express();
-initializeDatabase();
+// initializeDatabase();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json())
@@ -34,6 +34,18 @@ app.use("/auth", authRoutes)
 app.get("/", (req, res) => {
   res.send("Hello , Express server");
 });
+app.use(async (req, res, next) => {
+  try {
+    await initializeDatabase(); 
+    next();
+  } catch (error) {
+    res.status(500).json({ 
+      error: "Database Connection Failed", 
+      errorMessage: error.message 
+    });
+  }
+});
+
 
 export function verifyToken(req, res, next) {
   const authHeader = req.headers["authorization"];

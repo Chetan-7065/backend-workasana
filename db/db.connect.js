@@ -3,14 +3,31 @@ import mongoose from "mongoose"
 
 const mongoUri = process.env.MONGODB
 
-export function initializeDatabase(){
-  mongoose.connect(mongoUri, {
+if (!mongoUri) {
+  throw new Error("Please define the MONGODB_URI environment variable");
+}
+
+let isConnected = false;
+
+export async function initializeDatabase(){
+  if(isConnected) return
+  if (isConnected) return;
+
+  try {
+    const db = await mongoose.connect(mongoUri, {
     maxPoolSize: 20,
     serverSelectionTimeoutMS: 30000,
     socketTimeoutMS: 45000,
     connectTimeoutMS: 30000, 
     retryWrites: true,    
-    retryReads: true
-  }).then(() => console.log("Connected Successfully") ).catch((error) => console.log("Error while connecting the database" , error))
+    retryReads: true,
+    bufferCommands: false
+  });
+    isConnected = db.connections[0].readyState === 1; 
+    console.log(" New MongoDB connection established");
+  } catch (error) {
+    console.error("MongoDB connection error:", error);
+    throw error; 
+  }
 }
 
