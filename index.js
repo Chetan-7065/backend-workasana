@@ -20,20 +20,9 @@ const app = express();
 // initializeDatabase();
 const PORT = process.env.PORT || 3000;
 
+app.use(cors());
 app.use(express.json())
 
-// const corsOptions = {
-//   origin: "*",
-//   credentials: true,
-//   optionSuccessStatus: 200,
-// };
-
-app.use(cors());
-app.use("/auth", authRoutes)
-
-app.get("/", (req, res) => {
-  res.send("Hello , Express server");
-});
 app.use(async (req, res, next) => {
   try {
     await initializeDatabase(); 
@@ -46,6 +35,11 @@ app.use(async (req, res, next) => {
   }
 });
 
+app.use("/auth", authRoutes)
+
+app.get("/", (req, res) => {
+  res.send("Hello , Express server");
+});
 
 export function verifyToken(req, res, next) {
   const authHeader = req.headers["authorization"];
