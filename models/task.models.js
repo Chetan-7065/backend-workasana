@@ -16,6 +16,11 @@ const taskSchema = new mongoose.Schema(
       { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     ],
     tags: [{ type: String }],
+    dueDate: {
+      type: Date,
+      required: true,
+      default: Date.now
+    },
     timeToComplete: {
       type: Number,
       required: true,
