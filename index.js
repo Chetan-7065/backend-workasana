@@ -1,5 +1,5 @@
 import "dotenv/config";
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 import express from "express";
 import cors from "cors";
 import bcrypt from "bcrypt";
@@ -134,7 +134,7 @@ async function createNewTeam(teamData) {
 app.post("/team", verifyToken, async (req, res) => {
   try {
     const validatedBody = await createTeamZodSchema.parseAsync(req.body);
-    req.body = validatedBody;
+    req.body = validatedBody
     const savedTeam = await createNewTeam(req.body);
     if (savedTeam) {
       res.status(200).json(savedTeam);
@@ -385,7 +385,7 @@ app.delete("/task/:taskId", verifyToken, async (req, res) => {
 
 async function readUsersName(){
   try{
-    const users = await User.distinct("name")
+    const users = await User.find().select("name _id")
     return users
   }catch(error){
     throw error
