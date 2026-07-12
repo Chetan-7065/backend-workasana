@@ -339,7 +339,7 @@ app.post("/task/:taskId", verifyToken, async (req, res) => {
     if (updatedTask) {
       res.status(201).json({ message: "Updated successfully", updatedTask });
     } else {
-      res.status(404).json({ details: "Task not found." });
+      res.status(404).json({ error: "Task not found." });
     }
   } catch (error) {
     if (error.name === "ZodError") {
@@ -369,7 +369,7 @@ app.delete("/task/:taskId", verifyToken, async (req, res) => {
     if (deletedTask) {
       res.status(201).json({ message: "Deleted successfully", deletedTask });
     } else {
-      res.status(404).json({ details: "Task not found." });
+      res.status(404).json({ error: "Task not found." });
     }
   } catch (error) {
     res
@@ -380,6 +380,36 @@ app.delete("/task/:taskId", verifyToken, async (req, res) => {
       });
   }
 });
+
+/* user Api */
+
+async function readUsersName(){
+  try{
+    const users = await User.distinct("name")
+    return users
+  }catch(error){
+    throw error
+  }
+}
+
+app.get("/owners", verifyToken , async (req , res) => {
+  try{
+    const users = await readUsersName()
+    if(users.length > 0){
+      res.status(200).json(users)
+    }else{
+      res.status(404).json({error: "Users not found"})
+    }
+  }catch (error) {
+    res
+      .status(500)
+      .json({
+        error: "Failed to get owners.",
+        errorMessage: error.message,
+      });
+  }
+})
+
 
 /* Reports Api */
 
