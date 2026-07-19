@@ -154,7 +154,7 @@ app.post("/team", verifyToken, async (req, res) => {
 
 async function readAllTeams() {
   try {
-    const allTeams = await Team.find();
+    const allTeams = await Team.find().populate("members", "-email -password" );
     return allTeams;
   } catch (error) {
     throw error;
@@ -176,6 +176,40 @@ app.get("/team", verifyToken, async (req, res) => {
     });
   }
 });
+
+async function updateTeamById(teamId, dataToUpdate){
+  try{
+    const updatedTeam = await Team.findByIdAndUpdate(teamId, dataToUpdate, {
+      returnDocument: "after"
+    })
+    return updatedTeam
+  }catch(error){
+    throw error
+  }
+}
+
+app.post("/team/:teamId", verifyToken, async (req, res) => {
+  try{
+    const validatedBody = await createTeamZodSchema.parseAsync(req.body)
+    req.body = validatedBody
+    const updatedTeam = await updateTeamById(req.params.teamId, req.body)
+    if (updatedTeam) {
+      res.status(201).json({ message: "Updated successfully", updatedTeam });
+    } else {
+      res.status(404).json({ error: "Team not found." });
+    }
+  }catch(error){
+     if (error.name === "ZodError") {
+      res.status(400).json({
+        error: "Validation failed",
+        details: error.flatten().fieldErrors,
+      });
+    }
+    res
+      .status(500)
+      .json({ error: "Failed to update task.", details: error.message });
+  }
+})
 
 {
   /* Tag API */

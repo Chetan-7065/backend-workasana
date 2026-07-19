@@ -21,6 +21,7 @@ export const createTeamZodSchema = z.object({
       },
     ),
   description: z.string().trim().optional().or(z.literal("")),
+  members: z.array(z.string().refine((val) =>  mongoose.Types.ObjectId.isValid(val)))
 });
 
 export default createTeamZodSchema
